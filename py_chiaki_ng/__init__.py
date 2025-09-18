@@ -13,7 +13,8 @@ Features:
 
 Usage:
     >>> from py_chiaki_ng import Session, ControllerState
-    >>> session = Session(host='192.168.1.100')
+    >>> session = Session()
+    >>> session.initialize(host='192.168.1.100', regist_key='your_key')
     >>> session.start()
     >>> # Process video frames and send controller input
 """
@@ -21,18 +22,75 @@ Usage:
 __version__ = "0.1.0"
 __author__ = "RaceCrewAI"
 __email__ = "contact@racecrew.ai"
-__license__ = "AGPL-3.0-only"
+__license__ = "MIT"
 
-# Core imports will be added as modules are implemented
-# from .session import Session
-# from .controller import ControllerState  
-# from .video import VideoFrame
-# from .events import EventHandler
+# Import core C++ bindings
+try:
+    from py_chiaki_ng_core import (
+        # Core classes
+        Session,
+        ControllerState,
+        VideoFrame,
+        VideoProfile,
+        
+        # Enums
+        ErrorCode,
+        Target,
+        Codec,
+        EventType,
+        QuitReason,
+        ControllerButton,
+        VideoResolutionPreset,
+        VideoFPSPreset,
+        
+        # Utility functions
+        quit_reason_string,
+        quit_reason_is_error,
+        create_video_frame,
+        
+        # Constants
+        VIDEO_BUFFER_PADDING_SIZE,
+    )
+except ImportError as e:
+    # If C++ bindings aren't built yet, provide helpful error message
+    import sys
+    print(f"❌ C++ bindings not available: {e}", file=sys.stderr)
+    print("💡 Please build the C++ extension first:", file=sys.stderr)
+    print("   ./build.sh", file=sys.stderr)
+    print("   pip install -e .", file=sys.stderr)
+    
+    # Define placeholder classes for development
+    class Session:
+        def __init__(self): 
+            raise ImportError("C++ bindings not built. Run ./build.sh first.")
+    
+    class ControllerState:
+        def __init__(self): 
+            raise ImportError("C++ bindings not built. Run ./build.sh first.")
+    
+    class VideoFrame:
+        def __init__(self): 
+            raise ImportError("C++ bindings not built. Run ./build.sh first.")
 
 __all__ = [
-    # Will be populated as modules are implemented
-    # "Session",
-    # "ControllerState", 
-    # "VideoFrame",
-    # "EventHandler",
+    # Core classes
+    "Session",
+    "ControllerState", 
+    "VideoFrame",
+    "VideoProfile",
+    
+    # Enums
+    "ErrorCode",
+    "Target", 
+    "Codec",
+    "EventType",
+    "QuitReason",
+    "ControllerButton",
+    "VideoResolutionPreset",
+    "VideoFPSPreset",
+    
+    # Utility functions
+    "quit_reason_string",
+    "quit_reason_is_error", 
+    "create_video_frame",
 ]
